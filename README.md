@@ -1,7 +1,6 @@
 # @jacobbubu/pull-stream-types
 
 [![Build Status](https://travis-ci.org/jacobbubu/pull-stream-types.svg)](https://travis-ci.org/jacobbubu/pull-stream-types)
-[![Coverage Status](https://coveralls.io/repos/github/jacobbubu/pull-stream-types/badge.svg)](https://coveralls.io/github/jacobbubu/pull-stream-types)
 [![npm](https://img.shields.io/npm/v/@jacobbubu/pull-stream-types.svg)](https://www.npmjs.com/package/@jacobbubu/pull-stream-types/)
 
 > Yet another [pull-stream](https://github.com/pull-stream/pull-stream) typescript declaration file.

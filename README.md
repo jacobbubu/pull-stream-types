@@ -35,4 +35,4 @@ It works for `tsc`, `ts-node` and `ts-node-dev`.
 
 A test file(`test/pull-stream-test.ts`) has been provided to verify the correctness of the declaration file.
 
-You can `npm run build:watch` for the debugging.
+You can `npm run build:watch` for debugging.

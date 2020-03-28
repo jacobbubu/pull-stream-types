@@ -3,13 +3,22 @@ import * as pull from 'pull-stream'
 let source: pull.Source<string> = (end, cb) => undefined
 let through: pull.Through<string, string> = source => source
 let sink: pull.Sink<string> = source => undefined
+let duplex = {
+  source: source,
+  sink: sink
+}
 
 // Start with source and end with sink
 let nothing
 nothing = pull()
 nothing = pull(source, sink)
+nothing = pull(duplex, duplex)
+nothing = pull({ source }, sink)
+nothing = pull(source, { sink })
 nothing = pull(source, through, sink)
+nothing = pull(source, duplex, sink)
 nothing = pull(source, through, through, sink)
+nothing = pull(source, duplex, duplex, sink)
 
 // End with sink
 sink = pull(sink)

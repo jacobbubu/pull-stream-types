@@ -8,161 +8,167 @@ declare module 'pull-stream' {
     type Source<T> = (endOrError: Abort, cb: SourceCallback<T>) => void
     type Sink<T> = (source: Source<T>) => void
     type Through<T, U> = (source: Source<T>) => Source<U>
+
+    interface DuplexSource<In> {
+      source: Source<In>
+    }
+    interface DuplexSink<Out> {
+      sink: Sink<Out>
+    }
+
+    type DuplexThrough<In, Out> = DuplexSource<In> & DuplexSink<Out>
   }
 
+  type Source<In> = Pull.Source<In> | Pull.DuplexSource<In>
+  type Sink<Out> = Pull.Sink<Out> | Pull.DuplexSink<Out>
+  type Through<In, Out> = Pull.Through<In, Out> | Pull.Through<In, Out>
+
   function Pull(): undefined
-  function Pull<In, Out>(t1: Pull.Through<In, Out>): Pull.Through<In, Out>
+  function Pull<In, Out>(t1: Through<In, Out>): Pull.Through<In, Out>
 
-  function Pull<In, Out>(source: Pull.Source<In>, t1: Pull.Through<In, Out>): Pull.Source<Out>
-  function Pull<In, P1, Out>(
-    t1: Pull.Through<In, P1>,
-    t2: Pull.Through<P1, Out>
-  ): Pull.Through<In, Out>
-  function Pull<InOut>(source: Pull.Source<InOut>, sink: Pull.Sink<InOut>): undefined
+  function Pull<In, Out>(source: Source<In>, t1: Through<In, Out>): Pull.Source<Out>
+  function Pull<In, P1, Out>(t1: Through<In, P1>, t2: Through<P1, Out>): Pull.Through<In, Out>
+  function Pull<InOut>(source: Source<InOut>, sink: Sink<InOut>): undefined
 
   function Pull<In, P1, P2, Out>(
-    t1: Pull.Through<In, P1>,
-    t2: Pull.Through<P1, P2>,
-    t3: Pull.Through<P2, Out>
+    t1: Through<In, P1>,
+    t2: Through<P1, P2>,
+    t3: Through<P2, Out>
   ): Pull.Through<In, Out>
   function Pull<In, P1, Out>(
-    source: Pull.Source<In>,
-    t1: Pull.Through<In, P1>,
-    t2: Pull.Through<P1, Out>
+    source: Source<In>,
+    t1: Through<In, P1>,
+    t2: Through<Out, P1>
   ): Pull.Source<Out>
-  function Pull<In, Out>(
-    source: Pull.Source<In>,
-    t1: Pull.Through<In, Out>,
-    sink: Pull.Sink<Out>
-  ): undefined
+  function Pull<In, Out>(source: Source<In>, t1: Through<In, Out>, sink: Sink<Out>): undefined
 
   function Pull<In, P1, Out>(
-    source: Pull.Source<In>,
-    t1: Pull.Through<In, P1>,
-    t2: Pull.Through<P1, Out>,
-    sink: Pull.Sink<Out>
+    source: Source<In>,
+    t1: Through<In, P1>,
+    t2: Through<Out, P1>,
+    sink: Sink<Out>
   ): undefined
   function Pull<In, P1, P2, Out>(
-    source: Pull.Source<In>,
-    t1: Pull.Through<In, P1>,
-    t2: Pull.Through<P1, P2>,
-    t3: Pull.Through<P2, Out>,
-    sink: Pull.Sink<Out>
+    source: Source<In>,
+    t1: Through<In, P1>,
+    t2: Through<P1, P2>,
+    t3: Through<P2, Out>,
+    sink: Sink<Out>
   ): undefined
 
   function Pull<In, P1, P2, P3, Out>(
-    source: Pull.Source<In>,
-    t1: Pull.Through<In, P1>,
-    t2: Pull.Through<P1, P2>,
-    t3: Pull.Through<P2, P3>,
-    t4: Pull.Through<P3, Out>,
-    sink: Pull.Sink<Out>
+    source: Source<In>,
+    t1: Through<In, P1>,
+    t2: Through<P1, P2>,
+    t3: Through<P2, P3>,
+    t4: Through<P3, Out>,
+    sink: Sink<Out>
   ): undefined
   function Pull<In, P1, P2, P3, P4, Out>(
-    source: Pull.Source<In>,
-    t1: Pull.Through<In, P1>,
-    t2: Pull.Through<P1, P2>,
-    t3: Pull.Through<P2, P3>,
-    t4: Pull.Through<P3, P4>,
-    t5: Pull.Through<P4, Out>,
-    sink: Pull.Sink<Out>
+    source: Source<In>,
+    t1: Through<In, P1>,
+    t2: Through<P1, P2>,
+    t3: Through<P2, P3>,
+    t4: Through<P3, P4>,
+    t5: Through<P4, Out>,
+    sink: Sink<Out>
   ): undefined
 
-  function Pull<In>(sink: Pull.Sink<In>): Pull.Sink<In>
-  function Pull<In, Out>(t1: Pull.Through<In, Out>, sink: Pull.Sink<Out>): Pull.Sink<In>
+  function Pull<In>(sink: Sink<In>): Pull.Sink<In>
+  function Pull<In, Out>(t1: Through<In, Out>, sink: Sink<Out>): Pull.Sink<In>
   function Pull<In, P1, Out>(
-    t1: Pull.Through<In, P1>,
-    t2: Pull.Through<P1, Out>,
-    sink: Pull.Sink<Out>
+    t1: Through<In, P1>,
+    t2: Through<P1, Out>,
+    sink: Sink<Out>
   ): Pull.Sink<In>
   function Pull<In, P1, P2, Out>(
-    t1: Pull.Through<In, P1>,
-    t2: Pull.Through<P1, P2>,
-    t3: Pull.Through<P2, Out>,
-    sink: Pull.Sink<Out>
+    t1: Through<In, P1>,
+    t2: Through<P1, P2>,
+    t3: Through<P2, Out>,
+    sink: Sink<Out>
   ): Pull.Sink<In>
   function Pull<In, P1, P2, P3, Out>(
-    t1: Pull.Through<In, P1>,
-    t2: Pull.Through<P1, P2>,
-    t3: Pull.Through<P2, P3>,
-    t4: Pull.Through<P3, Out>,
-    sink: Pull.Sink<Out>
+    t1: Through<In, P1>,
+    t2: Through<P1, P2>,
+    t3: Through<P2, P3>,
+    t4: Through<P3, Out>,
+    sink: Sink<Out>
   ): Pull.Sink<In>
   function Pull<In, P1, P2, P3, P4, Out>(
-    t1: Pull.Through<In, P1>,
-    t2: Pull.Through<P1, P2>,
-    t3: Pull.Through<P2, P3>,
-    t4: Pull.Through<P3, P4>,
-    t5: Pull.Through<P4, Out>,
-    sink: Pull.Sink<Out>
+    t1: Through<In, P1>,
+    t2: Through<P1, P2>,
+    t3: Through<P2, P3>,
+    t4: Through<P3, P4>,
+    t5: Through<P4, Out>,
+    sink: Sink<Out>
   ): Pull.Sink<In>
   function Pull<In, P1, P2, P3, P4, P5, Out>(
-    t1: Pull.Through<In, P1>,
-    t2: Pull.Through<P1, P2>,
-    t3: Pull.Through<P2, P3>,
-    t4: Pull.Through<P3, P4>,
-    t5: Pull.Through<P4, P5>,
-    t6: Pull.Through<P5, Out>,
-    sink: Pull.Sink<Out>
+    t1: Through<In, P1>,
+    t2: Through<P1, P2>,
+    t3: Through<P2, P3>,
+    t4: Through<P3, P4>,
+    t5: Through<P4, P5>,
+    t6: Through<P5, Out>,
+    sink: Sink<Out>
   ): Pull.Sink<In>
 
-  function Pull<Out>(source: Pull.Source<Out>): Pull.Source<Out>
+  function Pull<Out>(source: Source<Out>): Pull.Source<Out>
 
   function Pull<In, P1, P2, Out>(
-    source: Pull.Source<In>,
-    t1: Pull.Through<In, P1>,
-    t2: Pull.Through<P1, P2>,
-    t3: Pull.Through<P2, Out>
+    source: Source<In>,
+    t1: Through<In, P1>,
+    t2: Through<P1, P2>,
+    t3: Through<P2, Out>
   ): Pull.Source<Out>
   function Pull<In, P1, P2, P3, Out>(
-    source: Pull.Source<In>,
-    t1: Pull.Through<In, P1>,
-    t2: Pull.Through<P1, P2>,
-    t3: Pull.Through<P2, P3>,
-    t4: Pull.Through<P3, Out>
+    source: Source<In>,
+    t1: Through<In, P1>,
+    t2: Through<P1, P2>,
+    t3: Through<P2, P3>,
+    t4: Through<P3, Out>
   ): Pull.Source<Out>
   function Pull<In, P1, P2, P3, P4, Out>(
-    source: Pull.Source<In>,
-    t1: Pull.Through<In, P1>,
-    t2: Pull.Through<P1, P2>,
-    t3: Pull.Through<P2, P3>,
-    t4: Pull.Through<P3, P4>,
-    t5: Pull.Through<P4, Out>
+    source: Source<In>,
+    t1: Through<In, P1>,
+    t2: Through<P1, P2>,
+    t3: Through<P2, P3>,
+    t4: Through<P3, P4>,
+    t5: Through<P4, Out>
   ): Pull.Source<Out>
   function Pull<In, P1, P2, P3, P4, P5, Out>(
-    source: Pull.Source<In>,
-    t1: Pull.Through<In, P1>,
-    t2: Pull.Through<P1, P2>,
-    t3: Pull.Through<P2, P3>,
-    t4: Pull.Through<P3, P4>,
-    t5: Pull.Through<P4, P5>,
-    t6: Pull.Through<P5, Out>
+    source: Source<In>,
+    t1: Through<In, P1>,
+    t2: Through<P1, P2>,
+    t3: Through<P2, P3>,
+    t4: Through<P3, P4>,
+    t5: Through<P4, P5>,
+    t6: Through<P5, Out>
   ): Pull.Source<Out>
 
   function Pull<In, P1, P2, P3, Out>(
-    t1: Pull.Through<In, P1>,
-    t2: Pull.Through<P1, P2>,
-    t3: Pull.Through<P2, P3>,
-    t4: Pull.Through<P3, Out>
+    t1: Through<In, P1>,
+    t2: Through<P1, P2>,
+    t3: Through<P2, P3>,
+    t4: Through<P3, Out>
   ): Pull.Through<In, Out>
   function Pull<In, P1, P2, P3, P4, Out>(
-    t1: Pull.Through<In, P1>,
-    t2: Pull.Through<P1, P2>,
-    t3: Pull.Through<P2, P3>,
-    t4: Pull.Through<P3, P4>,
-    t5: Pull.Through<P4, Out>
+    t1: Through<In, P1>,
+    t2: Through<P1, P2>,
+    t3: Through<P2, P3>,
+    t4: Through<P3, P4>,
+    t5: Through<P4, Out>
   ): Pull.Through<In, Out>
   function Pull<In, P1, P2, P3, P4, P5, Out>(
-    t1: Pull.Through<In, P1>,
-    t2: Pull.Through<P1, P2>,
-    t3: Pull.Through<P2, P3>,
-    t4: Pull.Through<P3, P4>,
-    t5: Pull.Through<P4, P5>,
-    t6: Pull.Through<P5, Out>
+    t1: Through<In, P1>,
+    t2: Through<P1, P2>,
+    t3: Through<P2, P3>,
+    t4: Through<P3, P4>,
+    t5: Through<P4, P5>,
+    t6: Through<P5, Out>
   ): Pull.Through<In, Out>
 
   function Pull(
-    ...pullStreams: ReadonlyArray<Pull.Source<any> | Pull.Sink<any> | Pull.Through<any, any>>
+    ...pullStreams: ReadonlyArray<Source<any> | Sink<any> | Through<any, any>>
   ): Pull.Source<any> | Pull.Sink<any> | Pull.Through<any, any> | undefined
 
   // Sources
@@ -212,15 +218,15 @@ declare module 'pull-stream' {
   namespace Pull {
     function asyncMap<In, Out>(
       fn: (data: In, cb: (err: CbError, result: Out) => void) => any
-    ): Pull.Through<In, Out>
+    ): Through<In, Out>
     function filterNot<InOut>(test: (data: InOut) => boolean): Pull.Through<InOut, InOut>
-    function filter<In, Out extends In>(test: (data: In) => data is Out): Pull.Through<In, Out>
+    function filter<In, Out extends In>(test: (data: In) => data is Out): Through<In, Out>
     function filter<InOut>(test: (data: InOut) => boolean): Pull.Through<InOut, InOut>
     function flatten<Out>(): Pull.Through<
-      ReadonlyArray<Out | Pull.Source<Out> | Pull.Through<any, Out>>,
+      ReadonlyArray<Out | Source<Out> | Pull.Through<any, Out>>,
       Out
     >
-    function map<In, Out>(fn: (data: In) => Out): Pull.Through<In, Out>
+    function map<In, Out>(fn: (data: In) => Out): Through<In, Out>
     function nonUnique<InOut>(
       prop?: ((data: InOut) => unknown) | keyof InOut
     ): Pull.Through<InOut, InOut>

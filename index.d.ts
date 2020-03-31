@@ -2,7 +2,6 @@ declare module 'pull-stream' {
   namespace Pull {
     type Abort = Error | boolean | null
     type EndOrError = Error | boolean | null
-    type CbError = Error | null
     type SourceCallback<T> = (end: EndOrError, data?: T) => void
 
     type Source<T> = (endOrError: Abort, cb: SourceCallback<T>) => void
@@ -173,51 +172,51 @@ declare module 'pull-stream' {
 
   // Sources
   namespace Pull {
-    function count(max?: number, onAbort?: (err?: CbError) => void): Pull.Source<number>
+    function count(max?: number, onAbort?: (err?: EndOrError) => void): Pull.Source<number>
     function empty(): Pull.Source<never>
     function error(): Pull.Source<never>
     function infinite<T = number>(
       generator?: () => T,
-      onAbort?: (err?: CbError) => void
+      onAbort?: (err?: EndOrError) => void
     ): Pull.Source<T>
     function keys(
       obj: object | ReadonlyArray<any>,
-      onAbort?: (err?: CbError) => void
+      onAbort?: (err?: EndOrError) => void
     ): Pull.Source<string>
-    function once<T>(value?: T, onAbort?: (err?: CbError) => void): Pull.Source<T>
+    function once<T>(value?: T, onAbort?: (err?: EndOrError) => void): Pull.Source<T>
     function values<T>(
       arrayOrObject?: Record<any, T> | ReadonlyArray<T>,
-      onAbort?: (err?: CbError) => void
+      onAbort?: (err?: EndOrError) => void
     ): Pull.Source<T>
   }
 
   // Sinks
   namespace Pull {
-    function collect<T>(cb?: (err: CbError, results: T[]) => void): Pull.Sink<T>
-    function concat(cb?: (err: CbError, result: string) => void): Pull.Sink<string>
-    function drain<T>(op?: (data: T) => unknown, cb?: (err: CbError) => void): Pull.Sink<T>
-    function find<T>(cb?: (err: CbError, results: T[]) => void): Pull.Sink<T>
+    function collect<T>(cb?: (err: EndOrError, results: T[]) => void): Pull.Sink<T>
+    function concat(cb?: (err: EndOrError, result: string) => void): Pull.Sink<string>
+    function drain<T>(op?: (data: T) => unknown, cb?: (err: EndOrError) => void): Pull.Sink<T>
+    function find<T>(cb?: (err: EndOrError, results: T[]) => void): Pull.Sink<T>
     function find<T>(
       test: ((data: T) => boolean) | keyof T,
-      cb?: (err: CbError, result: T) => void
+      cb?: (err: EndOrError, result: T) => void
     ): Pull.Sink<T>
     function log(): Pull.Sink<any>
-    function onEnd(cb?: (err: CbError) => void): Pull.Sink<any>
+    function onEnd(cb?: (err: EndOrError) => void): Pull.Sink<any>
     function reduce<T, U>(
       reducer: (acc: U | null, data: T) => U,
-      cb: (err: CbError, result: U) => void
+      cb: (err: EndOrError, result: U) => void
     ): Pull.Sink<T>
     function reduce<T, U>(
       reducer: (acc: U, data: T) => U,
       initial: U,
-      cb: (err: CbError, result: U) => void
+      cb: (err: EndOrError, result: U) => void
     ): Pull.Sink<T>
   }
 
   // Throughs
   namespace Pull {
     function asyncMap<In, Out>(
-      fn: (data: In, cb: (err: CbError, result: Out) => void) => any
+      fn: (data: In, cb: Pull.SourceCallback<Out>) => any
     ): Through<In, Out>
     function filterNot<InOut>(test: (data: InOut) => boolean): Pull.Through<InOut, InOut>
     function filter<In, Out extends In>(test: (data: In) => data is Out): Through<In, Out>
@@ -237,7 +236,7 @@ declare module 'pull-stream' {
     ): Pull.Through<InOut, InOut>
     function through<InOut>(
       op?: (data: InOut) => unknown,
-      onEnd?: (err: CbError) => void
+      onEnd?: (err: EndOrError) => void
     ): Pull.Through<InOut, InOut>
     function unique<InOut>(
       prop?: ((data: InOut) => unknown) | keyof InOut

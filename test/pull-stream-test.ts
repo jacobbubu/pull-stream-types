@@ -57,7 +57,7 @@ nothing = pull(pull.count(), numberSink)
 nothing = pull(pull.count(5), numberSink)
 nothing = pull(
   pull.count(5, err => {
-    if (err) log(err.stack)
+    if (err instanceof Error) log(err.stack)
   }),
   numberSink
 )
@@ -78,7 +78,7 @@ nothing = pull(
   pull.infinite(
     () => 'value',
     err => {
-      if (err) log(err.stack)
+      if (err instanceof Error) log(err.stack)
     }
   ),
   sink
@@ -89,7 +89,7 @@ nothing = pull(pull.keys({ hello: 'world' }), sink)
 nothing = pull(pull.keys([]), sink)
 nothing = pull(
   pull.keys([], err => {
-    if (err) log(err.stack)
+    if (err instanceof Error) log(err.stack)
   }),
   sink
 )
@@ -99,7 +99,7 @@ nothing = pull(pull.once('value'), sink)
 nothing = pull(pull.once(1), numberSink)
 nothing = pull(
   pull.once(1, err => {
-    if (err) log(err.stack)
+    if (err instanceof Error) log(err.stack)
   }),
   numberSink
 )
@@ -109,7 +109,7 @@ nothing = pull(pull.values(['hello', 'world']), sink)
 nothing = pull(pull.values([1, 2]), numberSink)
 nothing = pull(
   pull.values([1, 2], err => {
-    if (err) log(err.stack)
+    if (err instanceof Error) log(err.stack)
   }),
   numberSink
 )
@@ -182,7 +182,7 @@ nothing = pull(source, pull.through(Number), sink)
 nothing = pull(
   source,
   pull.through(Number, err => {
-    if (err) log(err.stack)
+    if (err instanceof Error) log(err.stack)
   }),
   sink
 )
@@ -200,7 +200,7 @@ nothing = pull(source, pull.unique('length'), sink)
 nothing = pull(
   source,
   pull.collect((err, results) => {
-    if (err) log(err.stack)
+    if (err instanceof Error) log(err.stack)
     const check: string[] = results
   })
 )
@@ -209,7 +209,7 @@ nothing = pull(
 nothing = pull(
   source,
   pull.concat((err, result) => {
-    if (err) log(err.stack)
+    if (err instanceof Error) log(err.stack)
     const check: string = result
   })
 )
@@ -219,7 +219,7 @@ nothing = pull(source, pull.drain(Number))
 nothing = pull(
   source,
   pull.drain(Number, err => {
-    if (err) log(err.stack)
+    if (err instanceof Error) log(err.stack)
   })
 )
 
@@ -228,19 +228,19 @@ nothing = pull(source, pull.find())
 nothing = pull(
   source,
   pull.find(err => {
-    if (err) log(err.stack)
+    if (err instanceof Error) log(err.stack)
   })
 )
 nothing = pull(
   source,
   pull.find(Boolean, err => {
-    if (err) log(err.stack)
+    if (err instanceof Error) log(err.stack)
   })
 )
 nothing = pull(
   source,
   pull.find('length', err => {
-    if (err) log(err.stack)
+    if (err instanceof Error) log(err.stack)
   })
 )
 
@@ -251,7 +251,7 @@ nothing = pull(source, pull.log())
 nothing = pull(
   source,
   pull.onEnd(err => {
-    if (err) log(err.stack)
+    if (err instanceof Error) log(err.stack)
   })
 )
 
@@ -261,7 +261,7 @@ nothing = pull(
   pull.reduce<string, number>(
     (acc, data) => (acc || 0) + Number(data),
     (err, result) => {
-      if (err) log(err.stack)
+      if (err instanceof Error) log(err.stack)
       const check: number = result
     }
   )
@@ -272,7 +272,7 @@ nothing = pull(
     (acc, data) => acc + Number(data),
     0,
     (err, result) => {
-      if (err) log(err.stack)
+      if (err instanceof Error) log(err.stack)
       const check: number = result
     }
   )

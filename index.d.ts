@@ -174,7 +174,8 @@ declare module 'pull-stream' {
   namespace Pull {
     function count(max?: number, onAbort?: (err?: EndOrError) => void): Pull.Source<number>
     function empty(): Pull.Source<never>
-    function error(): Pull.Source<never>
+    // tslint:disable-next-line handle-callback-err
+    function error(err: EndOrError): Pull.Source<never>
     function infinite<T = number>(
       generator?: () => T,
       onAbort?: (err?: EndOrError) => void

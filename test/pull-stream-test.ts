@@ -66,7 +66,7 @@ nothing = pull(
 nothing = pull(pull.empty(), sink)
 
 // error
-nothing = pull(pull.error(), sink)
+nothing = pull(pull.error(new Error('expected')), sink)
 
 // infinite
 nothing = pull(pull.infinite(), numberSink)

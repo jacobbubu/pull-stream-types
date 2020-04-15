@@ -15,6 +15,7 @@ declare module 'pull-stream' {
       sink: Sink<Out>
     }
 
+    type Duplex<In, Out> = DuplexSource<In> & DuplexSink<Out>
     type DuplexThrough<In, Out> = DuplexSource<In> & DuplexSink<Out>
   }
 

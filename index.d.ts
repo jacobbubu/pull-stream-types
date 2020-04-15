@@ -1,7 +1,7 @@
 declare module 'pull-stream' {
   namespace Pull {
     type Abort = Error | boolean | null
-    type EndOrError = Error | boolean | null
+    type EndOrError = Abort
     type SourceCallback<T> = (end: EndOrError, data?: T) => void
 
     type Source<T> = (endOrError: Abort, cb: SourceCallback<T>) => void
